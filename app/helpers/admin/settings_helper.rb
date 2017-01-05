@@ -33,6 +33,10 @@ module Admin::SettingsHelper
 
   private
 
+  def format_key(key)
+    key.gsub(/^[a-z]+_{1}/, '')
+  end
+
   def input_field_formatter(setting)
     str = ''
     str << 'input_field_setting_'

@@ -6,7 +6,17 @@
 #  https://github.com/puzzle/cryptopus.
 
 class Setting < ActiveRecord::Base
+  scope :by_section, lambda { |prefix|
+    Setting.where('key LIKE :prefix', { prefix: "#{prefix}_%" })
+      .order(order: :asc)
+  } 
+
   class << self
+    def two_factor_ip_whitelist
+      ips = Setting.find_by(key: 'general_two_factor_authentication_ip_white_list').value
+      ips.delete(' ').split(',')
+    end
+
     def value(prefix, key)
       key = "#{prefix}_#{key}" if prefix.present?
       setting = find_by(key: key)

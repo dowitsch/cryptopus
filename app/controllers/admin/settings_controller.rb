@@ -9,7 +9,8 @@ class Admin::SettingsController < Admin::AdminController
 
   # GET /settings
   def index
-    @settings = Setting.all
+    @general_settings = Setting.by_section('general')
+    @ldap_settings = Setting.by_section('ldap')
   end
 
   def update_all
