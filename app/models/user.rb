@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   has_many :teammembers, dependent: :destroy
   has_many :recryptrequests, dependent: :destroy
   has_many :teams, -> { order :name }, through: :teammembers
+  has_many :apikeys, foreign_key: :origin_user_id,
+           class_name: User::ApiKey
 
   scope :locked, -> { where(locked: true) }
   scope :unlocked, -> { where(locked: false) }
@@ -210,6 +212,10 @@ class User < ActiveRecord::Base
   def unlock
     update_attribute(:locked, false)
     update_attribute(:failed_login_attempts, 0)
+  end
+
+  def apikey
+    self.apikeys.first
   end
 
   private
