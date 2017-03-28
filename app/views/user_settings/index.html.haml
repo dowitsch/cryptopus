@@ -1,0 +1,29 @@
+-# coding: UTF-8
+-#  Copyright (c) 2008-2016, Puzzle ITC GmbH. This file is part of
+-#  Cryptopus and licensed under the Affero General Public License version 3 or later.
+-#  See the COPYING file at the top-level directory or at
+-#  https://github.com/puzzle/cryptopus.
+<h1>User Settings</h1>
+%table.table.table-striped
+  %tr
+    %th API Access:
+    %td
+      = change_api_access
+-if current_user.api_is_activated?
+  %table.table
+    %tr
+      %th API ID:
+      %td
+        = current_user.apikey.id
+    %tr
+      %th API KEY:
+      %td
+        = show_api_key
+    - if current_user.apikey.locked?
+      %tr
+        %th API locked:
+        %td
+          = link_to 'Unlock', user_setting_user_settings_unlock_api_path(current_user.apikey.id),
+            method: :post, class: 'btn btn-primary pull-right'
+
+

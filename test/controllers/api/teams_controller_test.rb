@@ -14,7 +14,7 @@ class Api::TeamsControllerTest < ActionController::TestCase
   test 'destroy team' do
     login_as(:admin)
     team = Fabricate(:private_team)
-    
+
     assert_difference('Team.count', -1) do
       delete :destroy, id: team.id
     end
@@ -71,5 +71,15 @@ class Api::TeamsControllerTest < ActionController::TestCase
       team2 = JSON.parse(response.body)['data']['teams'][1]['name']
       assert_equal team1, 'team1'
       assert_equal team2, 'team2'
+  end
+
+  test 'listing all teams with api authentication' do
+    api_key = "b5769035c051b99d1d45b0b89c746efc4e43b9f04668ea191bdde2373352baeb92427b9d354198c2"
+    api_id = users('alice').apikey.id
+
+    xhr :get, :index, api_key: api_key, api_id: api_id
+
+    team1 = JSON.parse(response.body)['data']['teams'][0]['name']
+    assert_equal team1, 'team1'
   end
 end

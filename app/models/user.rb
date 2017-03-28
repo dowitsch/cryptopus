@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   has_many :teammembers, dependent: :destroy
   has_many :recryptrequests, dependent: :destroy
   has_many :teams, -> { order :name }, through: :teammembers
+  has_many :apikeys, foreign_key: :origin_user_id,
+           class_name: User::ApiKey
 
   scope :locked, -> { where(locked: true) }
   scope :unlocked, -> { where(locked: false) }
@@ -24,7 +26,7 @@ class User < ActiveRecord::Base
 
   default_scope { order('username') }
 
-  before_destroy :protect_if_last_teammember
+  before_destroy :protect_if_last_teammember, :destroy_api_keys
 
   class << self
 
@@ -108,6 +110,11 @@ class User < ActiveRecord::Base
     admin? ? empower(actor, private_key) : disempower
   end
 
+  def toggle_api(actor, private_key)
+    raise 'user is not allowed to activate/deactivate api for this user' if self != actor
+    api_is_activated? ? deactivate_api : activate_api(private_key)
+  end
+
   def create_keypair(password)
     keypair = CryptUtils.new_keypair
     uncrypted_private_key = CryptUtils.get_private_key_from_keypair(keypair)
@@ -148,6 +155,10 @@ class User < ActiveRecord::Base
 
   def auth_db?
     auth == 'db'
+  end
+
+  def auth_api?
+    auth == 'api'
   end
 
   def update_password(old, new)
@@ -203,16 +214,31 @@ class User < ActiveRecord::Base
       .where('accountname like ? or accounts.description like ?', "%#{term}%", "%#{term}%")
   end
 
+  def identify_account(identifier)
+    accounts
+      .includes(group: [:team])
+      .where(identifier: identifier)
+      .limit(1).first
+  end
+
   def legacy_private_key?
     /^Salted/ !~ private_key
   end
 
   def unlock
-    update_attribute(:locked, false)
-    update_attribute(:failed_login_attempts, 0)
+    update!({locked: false, failed_login_attempts: 0})
+  end
+
+  def apikey
+    apikeys.first
+  end
+
+  def api_is_activated?
+    apikey.present?
   end
 
   private
+
   def empower(actor, private_key)
     teams = Team.where(teams: { private: false })
 
@@ -237,6 +263,25 @@ class User < ActiveRecord::Base
 
   def protect_if_last_teammember
     !last_teammember_in_any_team?
+  end
+
+  def destroy_api_keys
+    if type.nil?
+      apikeys.each do |api|
+        api.destroy
+      end
+    end
+  end
+
+  def activate_api(private_key)
+    ActiveRecord::Base.transaction do
+      apikey = User::ApiKey.new
+      apikey.create(self, private_key)
+    end
+  end
+
+  def deactivate_api
+    self.apikey.destroy
   end
 
 end

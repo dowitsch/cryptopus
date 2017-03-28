@@ -61,6 +61,23 @@ class CryptUtils
       team_password
     end
 
+    def encrypt_api_key(public_key, plain_api_key)
+      keypair = PKey::RSA.new(public_key)
+      encrypted_api_key = keypair.public_encrypt(plain_api_key)
+      return encrypted_api_key
+
+    rescue
+      return nil
+    end
+
+    def decrypt_api_key(private_key, api_key)
+      keypair = PKey::RSA.new(private_key)
+      decrypted_api_key = keypair.private_decrypt(api_key)
+      return decrypted_api_key
+    rescue
+      return nil
+    end
+
     def encrypt_private_key(private_key, password)
       cipher = OpenSSL::Cipher::Cipher.new(@@cypher)
       cipher.encrypt

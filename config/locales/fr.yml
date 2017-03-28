@@ -46,7 +46,7 @@ fr:
       type_to_search: "Appuyez pour rechercher..."
 
   accounts:
-    title: "Comptes" 
+    title: "Comptes"
     index:
       move: "Déplacer compte à un autre groupe"
       title: "Comptes du groupe %{group_name} de l'équipe %{team_name}"
@@ -193,6 +193,10 @@ fr:
           toggle:
             empowerd: "L'usutilisateur a reçu les droits d administrateur"
             disempowerd: "L'utilisateur a perdu les droits d'administrateur"
+      user_settings:
+        toggle:
+          activated: "l'API accès est maintenant activer"
+          deactivated: "l'Api accès est maintenant inactiver"
     members:
       added: "%{username} a été enlevé avec succès à l'équipe"
       removed: "%{username} a été ajouté avec succès à l'équipe"

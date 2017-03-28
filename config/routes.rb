@@ -6,6 +6,8 @@
 #  https://github.com/puzzle/cryptopus.
 
 Cryptopus::Application.routes.draw do
+
+
   scope "(:locale)", locale: /en|de|fr/ do
     namespace :recryptrequests do
       get 'new_ldap_password'
@@ -20,6 +22,10 @@ Cryptopus::Application.routes.draw do
           resources :items
         end
       end
+    end
+
+    resources :user_settings, only: [:index] do
+      post 'user_settings/unlock_api'
     end
 
     namespace :admin do
@@ -63,7 +69,12 @@ Cryptopus::Application.routes.draw do
   end
 
   scope '/api', module: 'api' do
+    resources :user_settings, only: [] do
+      patch :toggle_api, to: 'user_settings#toggle_api'
+    end
+
     scope '/search', module: 'search' do
+      get :identify_account
       get :accounts
       get :groups
       get :teams
@@ -80,7 +91,7 @@ Cryptopus::Application.routes.draw do
         get :last_teammember_teams
       end
       resources :groups, only: ['index'], module: 'team' do
-        resources :accounts, only: ['show'], module: 'group'
+        resources :accounts, module: 'group'
       end
       resources :members, except: [:new, :edit], module: 'team' do
         collection do

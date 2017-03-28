@@ -7,7 +7,7 @@ class Authentication::BruteForceDetector
   end
 
   def locked?
-    @user.locked? || user_temporarly_locked?
+    user.locked? || user_temporarly_locked?
   end
 
   def update(auth_successful)
@@ -19,28 +19,35 @@ class Authentication::BruteForceDetector
   end
 
   private
+
+  attr_accessor :user
+
   def user_temporarly_locked?
-    user_locked_until > Time.now if @user.last_failed_login_attempt_at
+    user_locked_until > now if user.last_failed_login_attempt_at
   end
 
   def user_locked_until
-    @user.last_failed_login_attempt_at +
-      LOCK_TIME_FAILED_LOGIN_ATTEMPT[@user.failed_login_attempts].seconds
+    user.last_failed_login_attempt_at +
+      LOCK_TIME_FAILED_LOGIN_ATTEMPT[user.failed_login_attempts].seconds
   end
 
   def update_failed_login_attempts
-    attempts = @user.failed_login_attempts + 1
+    attempts = user.failed_login_attempts + 1
 
     if attempts >= LOCK_TIME_FAILED_LOGIN_ATTEMPT.length
-      @user.update_attribute(:locked, true)
+      user.update_attribute(:locked, true)
     else
-      @user.update_attributes(failed_login_attempts: attempts,
-                              last_failed_login_attempt_at: Time.now)
+      user.update_attributes(failed_login_attempts: attempts,
+                             last_failed_login_attempt_at: now)
     end
   end
 
+  def now
+    DateTime.now.utc
+  end
+
   def reset_failed_login_attempts
-    @user.update_attribute(:failed_login_attempts, 0) if @user.failed_login_attempts > 0
+    user.unlock if user.failed_login_attempts > 0
   end
 
 end

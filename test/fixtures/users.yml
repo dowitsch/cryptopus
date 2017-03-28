@@ -24,6 +24,7 @@ bob:
   private_key: <%= "!!binary \"#{FixturesHelper.read_private_key('bob')}\"" %>
 
 alice:
+  id: 663665735
   username: alice
   givenname: Alice
   surname: test
@@ -32,6 +33,16 @@ alice:
   public_key: <%= "!!binary \"#{FixturesHelper.read_public_key('alice')}\"" %>
   private_key: <%= "!!binary \"#{FixturesHelper.read_private_key('alice')}\"" %>
 
+alice_api:
+  username: alice_api
+  givenname: AliceAPI
+  surname: apitest
+  auth: api
+  public_key: <%= "!!binary \"#{FixturesHelper.read_public_key('alice_api')}\"" %>
+  private_key: <%= "!!binary \"#{FixturesHelper.read_private_key('alice_api')}\"" %>
+  api_key:  <%= "!!binary \"#{FixturesHelper.read_api_key('alice_api')}\"" %>
+  type: 'User::ApiKey'
+  origin_user_id: 663665735
 
 admin:
   username: admin

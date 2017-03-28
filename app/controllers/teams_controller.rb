@@ -9,6 +9,7 @@ class TeamsController < ApplicationController
   before_filter :redirect_if_not_teammember_or_admin, except: [:index, :new, :create]
   before_filter :redirect_if_not_allowed_to_delete_team, only: [:destroy]
   helper_method :can_delete_team?, :team
+  helper_method :team_has_permisson_for_api?, :team
 
   # GET /teams
   def index
@@ -49,6 +50,7 @@ class TeamsController < ApplicationController
 
   # PUT /teams/1
   def update
+    api_permisson_handler(params['api'])
     respond_to do |format|
       if team.update_attributes(team_params)
         flash[:notice] = t('flashes.teams.updated')
@@ -84,8 +86,21 @@ class TeamsController < ApplicationController
     redirect_to teams_path
   end
 
+  def api_permisson_handler(teammember)
+    if teammember == 'api' && !team.teammember?(current_user.apikey.id)
+      decrypted_team_password = team.decrypt_team_password(current_user, session[:private_key])
+      team.add_user(current_user.apikey, decrypted_team_password)
+    elsif teammember.nil? && team.teammember?(current_user.apikey.id)
+      team.remove_user(current_user.apikey)
+    end
+  end
+
   def can_delete_team?(_team)
     current_user.admin?
+  end
+
+  def team_has_permisson_for_api?
+    team.teammember?(current_user.apikey.id)
   end
 
   def team

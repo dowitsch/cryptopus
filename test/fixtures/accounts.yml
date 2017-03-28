@@ -9,6 +9,7 @@ account1:
   group: group1
   username: <%= "!!binary \"#{FixturesHelper.read_account_username('team1', 'account1')}\"" %>
   password: <%= "!!binary \"#{FixturesHelper.read_account_password('team1', 'account1')}\"" %>
+  identifier: identifier1
 
 account2:
   accountname: account2
@@ -16,3 +17,4 @@ account2:
   group: group2
   username: <%= "!!binary \"#{FixturesHelper.read_account_username('team2', 'account2')}\"" %>
   password: <%= "!!binary \"#{FixturesHelper.read_account_password('team2', 'account2')}\"" %>
+  identifier: identifier2
