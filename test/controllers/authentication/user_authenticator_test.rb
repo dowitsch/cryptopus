@@ -40,26 +40,27 @@ class UserAuthenticatorTest < ActiveSupport::TestCase
 
   test 'increasing of failed login attempts and it\'s defined delays' do
     @params = {username: 'bob', password: 'wrong password'}
-    bruteForceDetector = Authentication::BruteForceDetector.new(bob)
-    locktimes = Authentication::BruteForceDetector::LOCK_TIME_FAILED_LOGIN_ATTEMPT
-    assert_equal 10, locktimes.count
-    locktimes.each_with_index do |timer, i|
+    LOCKTIMES = [0, 0, 0, 3, 5, 20, 30, 60, 120, 240].freeze
+    assert_equal 10, Authentication::BruteForceDetector::LOCK_TIME_FAILED_LOGIN_ATTEMPT.length
+
+    LOCKTIMES.each_with_index do |timer, i|
       attempt = i + 1
 
-      bob.update_attribute(:failed_login_attempts, attempt)
-      last_failed_login_time = Time.now.utc - (locktimes[attempt].seconds)
-      bob.update_attribute(:last_failed_login_attempt_at, last_failed_login_time)
+      last_failed_login_time = DateTime.now.utc - LOCKTIMES[i].seconds
+      bob.update!({last_failed_login_attempt_at: last_failed_login_time})
 
-      authenticate
+      assert_equal false, authenticator.send(:user_locked?), 'bob should should not be locked temporarly'
 
-      assert_not bruteForceDetector.send(:user_temporarly_locked?), 'bob shouldnt be locked temporarly'
+      Authentication::UserAuthenticator.new(@params).password_auth!
 
-      authenticate
+      if attempt == LOCKTIMES.count
+        assert_equal true, bob.reload.locked?, 'bob should be logged after 10 failed login attempts'
+        break
+      end
 
-      return if attempt == locktimes.count - 1
+      assert_equal attempt, bob.reload.failed_login_attempts
+      assert last_failed_login_time.to_i <= bob.last_failed_login_attempt_at.to_i
 
-      assert_equal attempt + 1, bob.failed_login_attempts
-      assert last_failed_login_time.to_i <= bob.reload.last_failed_login_attempt_at.to_i
     end
   end
 
