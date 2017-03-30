@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20170328082336) do
     t.integer  "failed_login_attempts",        default: 0,     null: false
     t.string   "type"
     t.integer  "origin_user_id"
-    t.string   "api_key"
+    t.binary   "api_key"
   end
 
 end
