@@ -13,7 +13,7 @@
     = image_tag('info.svg', class: 'info_icon private_info')
     %p.description.private
       = t('teams.description.private')
-    -if api_is_activated?
+    -if current_user.api_is_activated?
       .checkbox
         -if team_has_permisson_for_api?
           = check_box_tag('api', true, true)

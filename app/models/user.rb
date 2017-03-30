@@ -110,6 +110,11 @@ class User < ActiveRecord::Base
     admin? ? empower(actor, private_key) : disempower
   end
 
+  def toggle_api(actor, private_key)
+    raise 'user is not allowed to activate/deactivate api for this user' if self != actor
+    api_is_activated? ? deactivate_api : activate_api(private_key)
+  end
+
   def create_keypair(password)
     keypair = CryptUtils.new_keypair
     uncrypted_private_key = CryptUtils.get_private_key_from_keypair(keypair)
@@ -218,6 +223,10 @@ class User < ActiveRecord::Base
     self.apikeys.first
   end
 
+  def api_is_activated?
+    apikey.present?
+  end
+
   private
   def empower(actor, private_key)
     teams = Team.where(teams: { private: false })
@@ -243,6 +252,17 @@ class User < ActiveRecord::Base
 
   def protect_if_last_teammember
     !last_teammember_in_any_team?
+  end
+
+  def activate_api(private_key)
+    ActiveRecord::Base.transaction do
+      apikey = User::ApiKey.new
+      apikey.create(self, private_key)
+    end
+  end
+
+  def deactivate_api
+    self.apikey.destroy
   end
 
 end

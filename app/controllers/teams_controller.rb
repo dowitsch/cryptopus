@@ -10,7 +10,6 @@ class TeamsController < ApplicationController
   before_filter :redirect_if_not_allowed_to_delete_team, only: [:destroy]
   helper_method :can_delete_team?, :team
   helper_method :team_has_permisson_for_api?, :team
-  helper_method :api_is_activated?, :team
 
   # GET /teams
   def index
@@ -98,10 +97,6 @@ class TeamsController < ApplicationController
 
   def can_delete_team?(_team)
     current_user.admin?
-  end
-
-  def api_is_activated?
-    current_user.apikey.present?
   end
 
   def team_has_permisson_for_api?
