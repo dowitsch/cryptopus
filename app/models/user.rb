@@ -215,8 +215,7 @@ class User < ActiveRecord::Base
   end
 
   def unlock
-    update_attribute(:locked, false)
-    update_attribute(:failed_login_attempts, 0)
+    update!({locked: false, failed_login_attempts: 0})
   end
 
   def apikey
