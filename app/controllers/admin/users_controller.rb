@@ -40,9 +40,6 @@ class Admin::UsersController < Admin::AdminController
     if user == current_user
       flash[:error] = t('flashes.admin.users.destroy.own_user')
     else
-      user.apikeys.each do |api|
-        api.destroy
-      end
       user.destroy
     end
 

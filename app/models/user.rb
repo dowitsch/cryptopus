@@ -157,6 +157,10 @@ class User < ActiveRecord::Base
     auth == 'db'
   end
 
+  def auth_api?
+    auth == 'api'
+  end
+
   def update_password(old, new)
     return if ldap?
     if authenticate_db(old)

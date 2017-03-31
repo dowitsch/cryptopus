@@ -1,10 +1,12 @@
 require_relative 'authenticators/user_password.rb'
+require_relative 'authenticators/api_key.rb'
 
 class Authentication::UserAuthenticator
 
   def initialize(params)
     @authenticated = false
     @params = params
+    @authenticator_class = ::UserPassword
   end
 
   def password_auth!
@@ -20,7 +22,17 @@ class Authentication::UserAuthenticator
   end
 
   def api_key_auth!
-    raise 'not yet implemented'
+    @authenticator_class = ::ApiKey
+
+    return false unless preconditions?
+    return false if user_locked?
+
+    unless @authenticated = authenticator.auth!
+      add_error('Wrong API Key')
+    end
+
+    brute_force_detector.update(@authenticated)
+    @authenticated
   end
 
   def errors
@@ -35,7 +47,7 @@ class Authentication::UserAuthenticator
 
   def authenticator
     @authenticator ||=
-      ::UserPassword.new(@params)
+      @authenticator_class.new(@params)
   end
 
   def brute_force_detector
