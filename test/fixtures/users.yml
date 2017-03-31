@@ -33,14 +33,14 @@ alice:
   public_key: <%= "!!binary \"#{FixturesHelper.read_public_key('alice')}\"" %>
   private_key: <%= "!!binary \"#{FixturesHelper.read_private_key('alice')}\"" %>
 
-alice-api:
+alice_api:
   username: alice_api
   givenname: AliceAPI
   surname: apitest
   auth: db
-  public_key: <%= "!!binary \"#{FixturesHelper.read_public_key('alice-api')}\"" %>
-  private_key: <%= "!!binary \"#{FixturesHelper.read_private_key('alice-api')}\"" %>
-  api_key:  <%= "!!binary \"#{FixturesHelper.read_api_key('alice-api')}\"" %>
+  public_key: <%= "!!binary \"#{FixturesHelper.read_public_key('alice_api')}\"" %>
+  private_key: <%= "!!binary \"#{FixturesHelper.read_private_key('alice_api')}\"" %>
+  api_key:  <%= "!!binary \"#{FixturesHelper.read_api_key('alice_api')}\"" %>
   type: 'User::ApiKey'
   origin_user_id: 663665735
 

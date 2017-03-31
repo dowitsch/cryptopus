@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 
   default_scope { order('username') }
 
-  before_destroy :protect_if_last_teammember
+  before_destroy :protect_if_last_teammember, :destroy_api_keys
 
   class << self
 
@@ -251,6 +251,14 @@ class User < ActiveRecord::Base
 
   def protect_if_last_teammember
     !last_teammember_in_any_team?
+  end
+
+  def destroy_api_keys
+    if type == nil
+      apikeys.each do |api|
+        api.destroy
+      end
+    end
   end
 
   def activate_api(private_key)
