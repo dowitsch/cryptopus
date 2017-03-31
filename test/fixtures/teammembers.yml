@@ -18,6 +18,11 @@ team1_alice:
   user: alice
   password: <%= "!!binary \"#{FixturesHelper.read_team_password('alice', 'team1')}\"" %>
 
+team1_alice-api:
+  team: team1
+  user: alice-api
+  password: <%= "!!binary \"#{FixturesHelper.read_team_password('alice-api', 'team1')}\"" %>
+
 team1_admin:
     team: team1
     user: admin
