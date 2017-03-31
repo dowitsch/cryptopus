@@ -16,7 +16,7 @@ class UserFeatureTest < Capybara::Rails::TestCase
     visit('/admin/users')
     page.must_have_selector('a.delete_user_link')
 
-    all('a.delete_user_link')[1].click
+    all('a.delete_user_link')[2].click
 
     page.must_have_selector('#delete_user_button')
     assert_equal all('#delete_user_button')[0][:disabled], 'true'
@@ -37,6 +37,6 @@ class UserFeatureTest < Capybara::Rails::TestCase
     assert_equal all('#delete_user_button')[0][:disabled], nil
 
     all('#delete_user_button')[0].click
-    assert_not page.has_content?('alice')
+    assert page.has_content?('alice', count: 1)
   end
 end

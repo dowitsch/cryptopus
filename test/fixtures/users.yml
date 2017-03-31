@@ -34,7 +34,7 @@ alice:
   private_key: <%= "!!binary \"#{FixturesHelper.read_private_key('alice')}\"" %>
 
 alice-api:
-  username: alice-api
+  username: alice_api
   givenname: AliceAPI
   surname: apitest
   auth: db
