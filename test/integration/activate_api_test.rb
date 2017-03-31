@@ -9,20 +9,31 @@ require 'test_helper'
 class ActivateApi < ActionDispatch::IntegrationTest
   include IntegrationTest::DefaultHelper
 
-  test 'bob toggles api' do
+
+  test 'does not activate api for other user' do
+    login_as('alice')
+
+    assert_equal false, users(:bob).api_is_activated?
+    assert_nil users(:bob).apikey
+
+    assert_raise "user is not allowed to activate/deactivate api for this user" do
+      users(:alice).toggle_api(users(:bob), session[:private_key])
+    end
+    assert_equal false, users(:bob).api_is_activated?
+    assert_nil users(:bob).apikey
+  end
+
+
+  test 'does not deactivate api for other user' do
     login_as('bob')
 
-    assert_equal false, users(:bob).api_is_activated?
-    assert_nil users(:bob).apikey
+    assert_equal true, users(:alice).api_is_activated?
 
-    users(:bob).toggle_api(users(:bob), session[:private_key])
-
-    assert_equal true, users(:bob).api_is_activated?
-
-    users(:bob).toggle_api(users(:bob), session[:private_key])
-
-    assert_equal false, users(:bob).api_is_activated?
-    assert_nil users(:bob).apikey
+    assert_raise "user is not allowed to activate/deactivate api for this user" do
+      users(:bob).toggle_api(users(:alice), session[:private_key])
+    end
+    assert_equal true, users(:alice).api_is_activated?
+    assert users(:alice).apikey
   end
 
 end
