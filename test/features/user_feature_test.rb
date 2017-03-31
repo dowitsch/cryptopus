@@ -37,6 +37,6 @@ class UserFeatureTest < Capybara::Rails::TestCase
     assert_equal all('#delete_user_button')[0][:disabled], nil
 
     all('#delete_user_button')[0].click
-    assert page.has_content?('alice', count: 1)
+    assert_not page.has_content?('alice')
   end
 end
