@@ -19,7 +19,7 @@ class Api::Team::MembersControllerTest < ActionController::TestCase
 
     candidates = JSON.parse(response.body)['data']['users']
 
-    assert_equal 2, candidates.size
+    assert_equal 3, candidates.size
     assert candidates.any? {|c| c['label'] == 'Alice test' }, 'Alice should be candidate'
     assert candidates.any? {|c| c['label'] == 'Bob test' }, 'Bob should be candidate'
   end
@@ -34,7 +34,7 @@ class Api::Team::MembersControllerTest < ActionController::TestCase
 
     members = JSON.parse(response.body)['data']['teammembers']
 
-    assert_equal 3, members.size
+    assert_equal 4, members.size
     assert members.any? {|c| c['label'] == 'Alice test' }, 'Alice should be in team'
     assert members.any? {|c| c['label'] == 'Admin test' },  'Admin should be in team'
   end
