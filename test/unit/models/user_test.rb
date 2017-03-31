@@ -9,6 +9,23 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
 
+
+  test 'does destroy apikeys with user' do
+    alice = users(:alice)
+    alice_api = users(:alice_api)
+    assert_equal alice_api, User.find(alice_api.id)
+    assert_equal alice, User.find(alice.id)
+
+    alice.destroy!
+
+    assert_raise do
+      User.find(alice.id)
+    end
+    assert_raise do
+      User.find(alice_api.id)
+    end
+  end
+
   test 'does not create user without name' do
     user = User.new(username: '')
     assert_not user.valid?
