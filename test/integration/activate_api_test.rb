@@ -9,8 +9,20 @@ require 'test_helper'
 class ActivateApi < ActionDispatch::IntegrationTest
   include IntegrationTest::DefaultHelper
 
-  test 'bob activates api' do
+  test 'bob toggles api' do
     login_as('bob')
+
+    assert_equal false, users(:bob).api_is_activated?
+    assert_nil users(:bob).apikey
+
+    users(:bob).toggle_api(users(:bob), session[:private_key])
+
+    assert_equal true, users(:bob).api_is_activated?
+
+    users(:bob).toggle_api(users(:bob), session[:private_key])
+
+    assert_equal false, users(:bob).api_is_activated?
+    assert_nil users(:bob).apikey
   end
 
 end

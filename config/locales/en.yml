@@ -192,6 +192,10 @@ en:
           toggle:
             empowered: "%{username} is now an admin"
             disempowered: "%{username} is no more admin"
+      user_settings:
+        toggle:
+          activated: "API access is now activated"
+          deactivated: "API access is no deactivated"
       members:
         removed: "%{username} was successfully removed from team"
         added: "%{username} was successfully added to team"
@@ -221,7 +225,6 @@ en:
       maintenance_tasks:
         succeed: "Task was executed successfully."
         failed: "Task failed. See logs for more information."
-
     accounts:
       created: "Account was successfully created."
       updated: "Account was successfully updated."

@@ -61,12 +61,6 @@ class CryptUtils
       team_password
     end
 
-    def new_api_key
-      cipher = OpenSSL::Cipher::Cipher.new(@@cypher)
-      api_key = cipher.random_key
-      api_key
-    end
-
     def encrypt_api_key(public_key, plain_api_key)
       keypair = PKey::RSA.new(public_key)
       encrypted_api_key = keypair.public_encrypt(plain_api_key)

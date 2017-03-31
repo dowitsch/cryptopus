@@ -9,6 +9,6 @@ module UserSettingsHelper
   end
 
   def show_api_key
-    content_tag(:p, current_user.apikey.decrypted_api_key(session[:private_key]))
+    current_user.apikey.decrypted_api_key(session[:private_key])
   end
 end

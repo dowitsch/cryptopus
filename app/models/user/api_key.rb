@@ -9,7 +9,7 @@ class User::ApiKey < User
 
   def create(origin_user, private_key)
     self.origin_user_id = origin_user.id
-    plain_api_key = CryptUtils.new_api_key
+    plain_api_key = SecureRandom.hex(40)
     self.api_key = CryptUtils.encrypt_api_key(origin_user.public_key, plain_api_key)
     self.private_key = CryptUtils.encrypt_private_key(private_key, plain_api_key)
     self.public_key = origin_user.public_key
@@ -18,7 +18,7 @@ class User::ApiKey < User
   end
 
   def decrypted_api_key(private_key)
-    CryptUtils.decrypt_api_key(private_key, self.api_key)
+    CryptUtils.decrypt_api_key(private_key, self.api_key).force_encoding('UTF-8')
   end
 
 end
