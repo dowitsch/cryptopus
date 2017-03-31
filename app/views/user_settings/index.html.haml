@@ -4,18 +4,15 @@
 -#  See the COPYING file at the top-level directory or at
 -#  https://github.com/puzzle/cryptopus.
 <h1>User Settings</h1>
-<table>
-<tr>
-<th>API Access:</th>
-<td>
-= change_api_access
-</td>
-</tr>
-- if current_user.api_is_activated?
-  <tr>
-  <th>API KEY:</th>
-  <td>
-  - show_api_key
-  </td>
-  </tr>
-</table>
+%table.table.table-striped
+  %tr
+    %th API Access:
+    %td
+      = change_api_access
+-if current_user.api_is_activated?
+  %table.table
+    %tr
+      %th API KEY:
+      %td
+        = show_api_key
+

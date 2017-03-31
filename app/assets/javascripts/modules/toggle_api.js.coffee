@@ -13,7 +13,8 @@ class app.ToggleApi
     $.ajax({
       type: "PATCH",
       url: url
-    })
+    }).then (response) ->
+      location.reload()
 
   bind = ->
     $(document).on 'click', '.toggle-button-api', ->

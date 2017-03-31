@@ -192,6 +192,10 @@ de:
           toggle:
             empowered: "%{username} hat nun Admin-Rechte"
             disempowered: "Dem Benutzer %{username} wurden die Admin-Rechte entzogen"
+      user_settings:
+        toggle:
+          activated: "Api Zugang ist aktiviert"
+          deactivated: "Api Zugang ist deaktiviert"
       members:
         added: "%{username} wurde erfolgreich hinzugefügt"
         removed: "%{username} wurde erfolgreich entfernt"

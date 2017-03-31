@@ -37,6 +37,11 @@ class FixturesHelper
       read_file(filepath)
     end
 
+    def read_api_key(user)
+      filepath = "users/#{user}/apikey.crypt"
+      read_file(filepath)
+    end
+
     private
     def read_file(filepath)
       path = "#{Rails.root}/test/fixtures/files/#{filepath}"
