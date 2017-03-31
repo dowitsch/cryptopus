@@ -14,6 +14,7 @@ class User::ApiKey < User
     self.private_key = CryptUtils.encrypt_private_key(private_key, plain_api_key)
     self.public_key = origin_user.public_key
     self.username = origin_user.username + '_api'
+    self.auth = 'api'
     self.save!
   end
 
@@ -21,4 +22,7 @@ class User::ApiKey < User
     CryptUtils.decrypt_api_key(private_key, self.api_key).force_encoding('UTF-8')
   end
 
+  def decrypted_private_key(cleartext_api_key)
+    CryptUtils.decrypt_private_key(private_key, cleartext_api_key)
+  end
 end

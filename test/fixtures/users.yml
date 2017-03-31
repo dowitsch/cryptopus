@@ -37,7 +37,7 @@ alice_api:
   username: alice_api
   givenname: AliceAPI
   surname: apitest
-  auth: db
+  auth: api
   public_key: <%= "!!binary \"#{FixturesHelper.read_public_key('alice_api')}\"" %>
   private_key: <%= "!!binary \"#{FixturesHelper.read_private_key('alice_api')}\"" %>
   api_key:  <%= "!!binary \"#{FixturesHelper.read_api_key('alice_api')}\"" %>
