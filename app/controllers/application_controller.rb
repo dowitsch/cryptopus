@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_to_wizard_if_new_setup
   before_filter :message_if_fallback
   before_filter :authorize, except: [:login, :authenticate, :logout, :wizard]
-  before_filter :redirect_if_not_teammember
+  before_filter :refuse_if_not_teammember
   before_filter :redirect_if_no_private_key, except: :logout
   before_filter :prepare_menu
   before_filter :set_locale
@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def redirect_if_not_teammember
+  def refuse_if_not_teammember
     team_id = params[:team_id]
     return if team_id.nil?
     team = Team.find(team_id)

@@ -13,14 +13,15 @@
     = image_tag('info.svg', class: 'info_icon private_info')
     %p.description.private
       = t('teams.description.private')
-    -if current_user.api_is_activated?
-      .checkbox
-        -if team_has_permisson_for_api?
-          = check_box_tag('api', true, true)
-        -else
-          = check_box_tag('api')
   .form-group
     = f.label :description
     = f.text_area :description, class: 'form-control'
+  -if current_user.api_is_activated?
+    .form-group
+      -if team_has_permisson_for_api?
+        = check_box_tag('api', value=nil, checked=true)
+      -else
+        = check_box_tag('api', value='api')
+      = label_tag 'api', 'Api Access'
   = f.submit @submit_button_text, class: 'btn btn-primary'
   =link_to "Cancel", teams_path, {:class=>"btn btn-primary"}
