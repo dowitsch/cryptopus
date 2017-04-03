@@ -69,6 +69,13 @@ Cryptopus::Application.routes.draw do
     resources :user_settings, only: [] do
       patch :toggle_api, to: 'user_settings#toggle_api'
     end
+
+    resources :teams, only: [:index] do
+      namespace :teams do
+        resources :groups, only: [:index]
+      end
+    end
+
     scope '/search', module: 'search' do
       get :accounts
       get :groups

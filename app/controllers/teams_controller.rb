@@ -87,7 +87,7 @@ class TeamsController < ApplicationController
   end
 
   def api_permisson_handler(teammember)
-    if teammember == "true" && !team.teammember?(current_user.apikey.id)
+    if teammember == 'api' && !team.teammember?(current_user.apikey.id)
       decrypted_team_password = team.decrypt_team_password(current_user, session[:private_key])
       team.add_user(current_user.apikey, decrypted_team_password)
     elsif teammember.nil? && team.teammember?(current_user.apikey.id)

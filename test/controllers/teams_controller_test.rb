@@ -11,6 +11,47 @@ class TeamsControllerTest < ActionController::TestCase
 
   include ControllerTest::DefaultHelper
 
+
+  test "alice deactivates and activates api access for team" do
+    login_as(:alice)
+    team = teams(:team1)
+    alice = users(:alice)
+
+    assert team.teammember?(alice.apikey)
+
+    team_params = {name: team.name, description: team.description}
+
+    put :update, id: team, api: nil, team: team_params
+
+    team.reload
+
+    assert_not team.teammember?(alice.apikey)
+
+
+    put :update, id: team, api: 'api', team: team_params
+
+    team.reload
+
+    assert team.teammember?(alice.apikey)
+  end
+
+  test "alice cannot activates api for team she is not member" do
+    login_as(:alice)
+    team = teams(:team2)
+    alice = users(:alice)
+
+    assert_not team.teammember?(alice)
+    assert_not team.teammember?(alice.apikey)
+
+    team_params = {name: team.name, description: team.description}
+
+    put :update, id: team, api: 'api', team: team_params
+
+    team.reload
+
+    assert_not team.teammember?(alice.apikey)
+  end
+
   test "admin can delete team if in team" do
     login_as(:admin)
 
@@ -97,7 +138,7 @@ class TeamsControllerTest < ActionController::TestCase
 
     update_params = { private: true }
 
-    put :update, id: team, team: update_params
+    put :update, id: team.id, team: update_params
 
     team.reload
 

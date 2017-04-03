@@ -9,7 +9,11 @@ class Api::TeamsController < ApiController
   before_filter :admin_only, except: :index
 
   def index
-    teams = current_user.teams
+    if current_user
+      teams = current_user.teams
+    else
+      teams = api_user.teams
+    end
     render_json teams
   end
 

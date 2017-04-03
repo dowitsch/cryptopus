@@ -28,7 +28,7 @@ class Authentication::UserAuthenticator
     return false if user_locked?
 
     unless @authenticated = authenticator.auth!
-      add_error('Wrong API Key')
+      #TODO Fehlermeldung dem API übergeben
     end
 
     brute_force_detector.update(@authenticated)
