@@ -30,7 +30,12 @@ class ApiController < ApplicationController
 
 
   def api_user
-    @api_user ||= User.find(params['api_id'])
+    begin
+      @api_user ||= User.find(params['api_id'])
+    rescue
+      add_error("No API-Key with the ID #{params['api_id']}")
+      return false
+    end
   end
 
 
@@ -50,8 +55,6 @@ class ApiController < ApplicationController
   def authenticated?
     api_id = params[:api_id]
     api_key = params[:api_key]
-
-    api_user = User.find(api_id) if api_id.present?
 
     if api_user
       authenticate_api_user(api_id, api_key)
@@ -73,6 +76,7 @@ class ApiController < ApplicationController
   end
 
   def refuse_if_not_teammember
+    return super if session[:private_key]
     team_id = params[:team_id]
     return if team_id.nil?
     team = Team.find(team_id)
@@ -93,6 +97,21 @@ class ApiController < ApplicationController
 
   def success_or_error
     messages[:errors].present? ? :internal_server_error : nil
+  end
+
+  def decrypted_private_key
+    CryptUtils.decrypt_private_key(api_user.private_key, params['api_key'])
+  end
+
+  def plaintext_team_password(team)
+    return super if session[:private_key]
+    team_password = team.decrypt_team_password(api_user, decrypted_private_key)
+    unless team_password
+      add_error('Failed to decrypt the team password')
+      render_json
+      return
+    end
+    team_password
   end
 
 end

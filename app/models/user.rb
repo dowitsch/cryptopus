@@ -214,6 +214,13 @@ class User < ActiveRecord::Base
       .where('accountname like ? or accounts.description like ?', "%#{term}%", "%#{term}%")
   end
 
+  def identify_account(identifier)
+    accounts
+      .includes(group: [:team])
+      .where(identifier: identifier)
+      .limit(1).first
+  end
+
   def legacy_private_key?
     /^Salted/ !~ private_key
   end

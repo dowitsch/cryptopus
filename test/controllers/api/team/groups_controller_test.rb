@@ -20,4 +20,13 @@ class Api::Team::GroupsControllerTest < ActionController::TestCase
 
     assert_equal groups, 'group1'
   end
+
+  test 'listing all groups of a choosen team with api authentication' do
+    team = teams(:team1)
+
+    xhr :get, :index, team_id: team, api_key: api_key_alice, api_id: api_id('alice')
+    groups = JSON.parse(response.body)['data']['groups'][0]['name']
+
+    assert_equal groups, 'group1'
+  end
 end

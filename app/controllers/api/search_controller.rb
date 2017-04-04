@@ -25,4 +25,19 @@ class Api::SearchController < ApiController
     render_json current_user.search_teams(term)
   end
 
+  def identify_account
+    identifier = params[:identifier]
+
+    account = api_user.identify_account(identifier)
+
+    if account
+      team = account.group.team
+      account.decrypt(plaintext_team_password(team))
+      render_json account
+    else
+      add_error('No Account with this identifier found')
+      render_json
+    end
+  end
+
 end
