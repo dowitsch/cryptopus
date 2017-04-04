@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170328082336) do
+ActiveRecord::Schema.define(version: 20170404132754) do
 
   create_table "accounts", force: :cascade do |t|
     t.string   "accountname", limit: 70, default: "", null: false
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20170328082336) do
     t.binary   "password"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "identifier"
   end
 
   create_table "groups", force: :cascade do |t|

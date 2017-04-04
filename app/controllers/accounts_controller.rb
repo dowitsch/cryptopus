@@ -120,7 +120,7 @@ class AccountsController < ApplicationController
   private
 
   def account_params
-    params.require(:account).permit(:accountname, :cleartext_username, :cleartext_password, :description, :group_id)
+    params.require(:account).permit(:accountname, :cleartext_username, :cleartext_password, :description, :group_id, :identifier)
   end
 
   def group

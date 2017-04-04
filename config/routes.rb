@@ -70,13 +70,8 @@ Cryptopus::Application.routes.draw do
       patch :toggle_api, to: 'user_settings#toggle_api'
     end
 
-    resources :teams, only: [:index] do
-      namespace :teams do
-        resources :groups, only: [:index]
-      end
-    end
-
     scope '/search', module: 'search' do
+      get :identify_account
       get :accounts
       get :groups
       get :teams
@@ -93,7 +88,7 @@ Cryptopus::Application.routes.draw do
         get :last_teammember_teams
       end
       resources :groups, only: ['index'], module: 'team' do
-        resources :accounts, only: ['show'], module: 'group'
+        resources :accounts, module: 'group'
       end
       resources :members, except: [:new, :edit], module: 'team' do
         collection do
