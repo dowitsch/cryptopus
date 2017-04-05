@@ -7,7 +7,6 @@
 
 Cryptopus::Application.routes.draw do
 
-  get 'user_settings/index'
 
   scope "(:locale)", locale: /en|de|fr/ do
     namespace :recryptrequests do
@@ -23,6 +22,10 @@ Cryptopus::Application.routes.draw do
           resources :items
         end
       end
+    end
+
+    resources :user_settings, only: [:index] do
+      post 'user_settings/unlock_api'
     end
 
     namespace :admin do

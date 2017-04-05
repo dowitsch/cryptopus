@@ -30,12 +30,10 @@ class ApiController < ApplicationController
 
 
   def api_user
-    begin
-      @api_user ||= User.find(params['api_id'])
-    rescue
-      add_error("No API-Key with the ID #{params['api_id']}")
-      return false
-    end
+    @api_user ||= User.find(params['api_id'])
+  rescue
+    add_error("No API-Key with the ID #{params['api_id']}")
+    return false
   end
 
 
@@ -43,7 +41,7 @@ class ApiController < ApplicationController
 
   def authorize
     if params[:api_key] || params[:api_id]
-      if !authenticated?
+      unless authenticated?
         render status: :unauthorized, json: { messages: messages }
         return
       end
@@ -53,17 +51,14 @@ class ApiController < ApplicationController
   end
 
   def authenticated?
-    api_id = params[:api_id]
-    api_key = params[:api_key]
-
     if api_user
-      authenticate_api_user(api_id, api_key)
+      authenticate_api_user
     else
       return false
     end
   end
 
-  def authenticate_api_user(api_id, api_key)
+  def authenticate_api_user
     authenticator = Authentication::UserAuthenticator.new(params)
 
     if authenticator.api_key_auth!
@@ -83,7 +78,6 @@ class ApiController < ApplicationController
     return if team.teammember?(api_user.id)
     add_error 'No Access to Team'
     render_json
-    return
   end
 
   def messages
