@@ -24,7 +24,7 @@ class ActivateApi < ActionDispatch::IntegrationTest
   end
 
 
-  test 'does not deactivate api for other user' do
+  test 'bob activates api access' do
     login_as('bob')
 
     assert_equal true, users(:alice).api_is_activated?
