@@ -65,13 +65,11 @@ class Api::Team::Group::AccountsController < ApiController
   end
 
   def group
-    begin
-      @group ||= team.groups.find(params[:group_id])
-    rescue
-      add_error('Group not found in this team')
-      render_json
-      return
-    end
+    @group ||= team.groups.find(params[:group_id])
+  rescue
+    add_error('Group not found in this team')
+    render_json
+    return
   end
 
 end

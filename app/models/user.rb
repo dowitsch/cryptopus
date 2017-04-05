@@ -230,7 +230,7 @@ class User < ActiveRecord::Base
   end
 
   def apikey
-    self.apikeys.first
+    apikeys.first
   end
 
   def api_is_activated?
@@ -238,6 +238,7 @@ class User < ActiveRecord::Base
   end
 
   private
+
   def empower(actor, private_key)
     teams = Team.where(teams: { private: false })
 
@@ -265,7 +266,7 @@ class User < ActiveRecord::Base
   end
 
   def destroy_api_keys
-    if type == nil
+    if type.nil?
       apikeys.each do |api|
         api.destroy
       end
