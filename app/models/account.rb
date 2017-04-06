@@ -14,7 +14,7 @@ class Account < ActiveRecord::Base
   validates :accountname, uniqueness: { scope: :group }
   validates :accountname, length: { maximum: 70 }
   validates :description, length: { maximum: 4000 }
-
+  validate :unique_identifier_in_team
   attr_accessor :cleartext_password, :cleartext_username
 
   def label
@@ -49,6 +49,19 @@ class Account < ActiveRecord::Base
     return unless cleartext_password.present?
     crypted_value = CryptUtils.encrypt_blob(cleartext_password, team_password)
     self.password = crypted_value
+  end
+
+  def unique_identifier_in_team
+    return true if self.group.nil?
+    team = self.group.team
+    unless team.nil?
+      team.groups.each do |acc|
+        if identifier == self.identifier && acc != self
+          return false
+        end
+        return true
+      end
+    end
   end
 
 end
